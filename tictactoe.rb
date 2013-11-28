@@ -106,8 +106,7 @@ class TicTacToe
   def win
     move_to_win = nil
     @possible_wins.each do |array|
-      p "COMPUTER MOVES: #{@o_moves}"
-      p possible_win = (array - @o_moves)
+      possible_win = (array - @o_moves)
       if possible_win.size == 1 && @board[possible_win.first].nil?
         move_to_win = possible_win.first
       end
