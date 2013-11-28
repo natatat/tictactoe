@@ -17,8 +17,7 @@ class TicTacToe
   end
 
   def run!
-    puts "Time for some TicTacToe!"
-    puts "------------------------"
+    system('clear')
     print_board
 
     play
@@ -37,11 +36,21 @@ class TicTacToe
   end
 
   def who_won?
+    system('clear')
     print_board
     if @winner
       puts "#{@winner} has won!"
     else
       puts "It's a Draw!"
+    end
+
+    puts "Play again? y/n"
+    input = gets.chomp.downcase
+    if input == 'y'
+      game = TicTacToe.new
+      game.run!
+    else
+      exit
     end
   end
 
@@ -68,6 +77,8 @@ class TicTacToe
     move = run_algorithm
     @board[move] = "o"
     @o_moves << move
+
+    system('clear')
     print_board
     play
   end
