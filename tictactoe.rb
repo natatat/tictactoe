@@ -8,6 +8,14 @@ class TicTacToe
     @o_moves = []
   end
 
+  def print_board
+    puts "---------"
+    puts "[#{@board[0]||1}][#{@board[1]||2}][#{@board[2]||3}]"
+    puts "[#{@board[3]||4}][#{@board[4]||5}][#{@board[5]||6}]"
+    puts "[#{@board[6]||7}][#{@board[7]||8}][#{@board[8]||9}]"
+    puts "---------"
+  end
+
   def run!
     puts "Time for some TicTacToe!"
     puts "------------------------"
@@ -66,11 +74,21 @@ class TicTacToe
   def get_next_move
     if @board.compact.size == 1
       move = play_center || play_corner
-      @o_moves << move
-      move
     else
-      run_algorithm
+      move = run_algorithm
     end
+    @o_moves << move
+    move
+  end
+
+  def possibilities
+    possibilities = []
+    @board.each_with_index do |element, index|
+      if element.nil?
+        possibilities << index
+      end
+    end
+    possibilities
   end
 
   def play_center
@@ -91,7 +109,8 @@ class TicTacToe
     puts "win"
     move_to_win = nil
     @possible_wins.each do |array|
-      possible_win = array - @o_moves
+      p "COMPUTER MOVES: #{@o_moves}"
+      p possible_win = (array - @o_moves)
       if possible_win.size == 1 && @board[possible_win.first].nil?
         move_to_win = possible_win.first
       end
@@ -126,24 +145,6 @@ class TicTacToe
 
   def run_algorithm
     win || block || fork || play_center || play_corner || possibilities.sample
-  end
-
-  def possibilities
-    possibilities = []
-    @board.each_with_index do |element, index|
-      if element.nil?
-        possibilities << index
-      end
-    end
-    possibilities
-  end
-
-  def print_board
-    puts "---------"
-    puts "[#{@board[0]||1}][#{@board[1]||2}][#{@board[2]||3}]"
-    puts "[#{@board[3]||4}][#{@board[4]||5}][#{@board[5]||6}]"
-    puts "[#{@board[6]||7}][#{@board[7]||8}][#{@board[8]||9}]"
-    puts "---------"
   end
 
   def game_done?
