@@ -65,15 +65,15 @@ class TicTacToe
     @current_player = "The computer"
     @next_player = "x"
 
-    @board[get_next_move] = "o"
+    move = run_algorithm
+    @board[move] = "o"
+    @o_moves << move
     print_board
     play
   end
 
-  def get_next_move
-    move = run_algorithm
-    @o_moves << move
-    move
+  def run_algorithm
+    win || block || fork || try_to_win || play_center || play_corner || possibilities.sample
   end
 
   def possibilities
@@ -123,10 +123,14 @@ class TicTacToe
   def fork
     if (@board[0] == "x" && @board[8] == "x") || (@board[2] == "x" && @board[6] == "x")
       (possibilities & [1,3,5,7]).sample
-    elsif (@board[1] == "x" && @board[8] == "x") || (@board[1] == "x" && @board[6] == "x")
-      (possibilities & [0..3]).sample
-    elsif (@board[0] == "x" && @board[7] == "x") || (@board[2] == "x" && @board[7] == "x")
-      (possibilities & [5..8]).sample
+    elsif (@board[1] == "x" && @board[8] == "x")
+      (possibilities & [2]).sample
+    elsif (@board[1] == "x" && @board[6] == "x")
+      (possibilities & [0]).sample
+    elsif (@board[0] == "x" && @board[7] == "x")
+      (possibilities & [6]).sample
+    elsif (@board[2] == "x" && @board[7] == "x")
+      (possibilities & [8]).sample
     else
       false
     end
@@ -141,10 +145,6 @@ class TicTacToe
       end
     end
     move_to_win
-  end
-
-  def run_algorithm
-    win || block || fork || try_to_win || play_center || play_corner || possibilities.sample
   end
 
   def game_done?
