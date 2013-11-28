@@ -124,13 +124,13 @@ class TicTacToe
     if (@board[0] == "x" && @board[8] == "x") || (@board[2] == "x" && @board[6] == "x")
       (possibilities & [1,3,5,7]).sample
     elsif (@board[1] == "x" && @board[8] == "x")
-      possibilities & [2]
+      (possibilities & [2]).sample
     elsif (@board[1] == "x" && @board[6] == "x")
-      possibilities & [0]
+      (possibilities & [0]).sample
     elsif (@board[0] == "x" && @board[7] == "x")
-      possibilities & [6]
+      (possibilities & [6]).sample
     elsif (@board[2] == "x" && @board[7] == "x")
-      possibilities & [8]
+      (possibilities & [8]).sample
     else
       false
     end
