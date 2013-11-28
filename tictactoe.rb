@@ -92,12 +92,10 @@ class TicTacToe
   end
 
   def play_center
-    puts "center"
     @board[4].nil? ? 4 : false
   end
 
   def play_corner
-    puts "corner"
     if @board[0].nil? || @board[2].nil? || @board[6].nil? || @board[8].nil?
       (possibilities & [0,2,6,8]).sample
     else
@@ -106,7 +104,6 @@ class TicTacToe
   end
 
   def win
-    puts "win"
     move_to_win = nil
     @possible_wins.each do |array|
       p "COMPUTER MOVES: #{@o_moves}"
@@ -119,7 +116,6 @@ class TicTacToe
   end
 
   def block
-    puts "block"
     move_to_block = nil
     @possible_wins.each do |array|
       possible_lose = array - @x_moves
@@ -131,7 +127,6 @@ class TicTacToe
   end
 
   def fork
-    puts "fork"
     if (@board[0] == "x" && @board[8] == "x") || (@board[2] == "x" && @board[6] == "x")
       (possibilities & [1,3,5,7]).sample
     elsif (@board[1] == "x" && @board[8] == "x") || (@board[1] == "x" && @board[6] == "x")
