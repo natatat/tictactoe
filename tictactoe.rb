@@ -49,7 +49,7 @@ class TicTacToe
     puts "Pick your move:"
     move = gets.chomp.to_i - 1
 
-    if @board[move] == nil
+    if @board[move].nil?
       @current_player = "The user"
       @next_player = "o"
       @board[move] = "x"
