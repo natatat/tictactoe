@@ -65,18 +65,13 @@ class TicTacToe
     @current_player = "The computer"
     @next_player = "x"
 
-    puts "The computer's move:"
     @board[get_next_move] = "o"
     print_board
     play
   end
 
   def get_next_move
-    if @board.compact.size == 1
-      move = play_center || play_corner
-    else
-      move = run_algorithm
-    end
+    move = run_algorithm
     @o_moves << move
     move
   end
@@ -117,7 +112,7 @@ class TicTacToe
   def block
     move_to_block = nil
     @possible_wins.each do |array|
-      possible_lose = array - @x_moves
+      possible_lose = (array - @x_moves)
       if possible_lose.size == 1 && @board[possible_lose.first].nil?
         move_to_block = possible_lose.first
       end
@@ -137,8 +132,19 @@ class TicTacToe
     end
   end
 
+  def try_to_win
+    move_to_win = nil
+    @possible_wins.each do |array|
+      possible_win = (array - @o_moves)
+      if possible_win.size == 2 && (possibilities & possible_win).size == 2
+        move_to_win = possible_win.sample
+      end
+    end
+    move_to_win
+  end
+
   def run_algorithm
-    win || block || fork || play_center || play_corner || possibilities.sample
+    win || block || fork || try_to_win || play_center || play_corner || possibilities.sample
   end
 
   def game_done?
