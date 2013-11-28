@@ -2,7 +2,6 @@ class TicTacToe
 
   def initialize
     @board = Array.new(9)
-    @board_empty = true
     @game_done = false
     @next_player = "x"
     @x_moves = []
@@ -30,6 +29,7 @@ class TicTacToe
   end
 
   def who_won?
+    print_board
     if @winner
       puts "#{@winner} has won!"
     else
@@ -64,9 +64,8 @@ class TicTacToe
   end
 
   def get_next_move
-    if @board_empty == true
-      @board_empty = false
-      move = rand(9)
+    if @board.compact.size == 1
+      move = play_center || play_corner
       @o_moves << move
       move
     else
@@ -74,71 +73,69 @@ class TicTacToe
     end
   end
 
-  def run_algorithm
-    possibilities = find_possibilities
-    eliminations = eliminate_possibilites
-
-    next_move_possibilities = possibilities - eliminations
-    ordered_possibilities = prioritize(next_move_possibilities)
-    find_empty_position(ordered_possibilities)
+  def play_center
+    puts "center"
+    @board[4].nil? ? 4 : false
   end
 
-  def find_possibilities
+  def play_corner
+    puts "corner"
+    if @board[0].nil? || @board[2].nil? || @board[6].nil? || @board[8].nil?
+      (possibilities & [0,2,6,8]).sample
+    else
+      false
+    end
+  end
+
+  def win
+    puts "win"
+    move_to_win = nil
+    @possible_wins.each do |array|
+      possible_win = array - @o_moves
+      if possible_win.size == 1 && @board[possible_win.first].nil?
+        move_to_win = possible_win.first
+      end
+    end
+    move_to_win
+  end
+
+  def block
+    puts "block"
+    move_to_block = nil
+    @possible_wins.each do |array|
+      possible_lose = array - @x_moves
+      if possible_lose.size == 1 && @board[possible_lose.first].nil?
+        move_to_block = possible_lose.first
+      end
+    end
+    move_to_block
+  end
+
+  def fork
+    puts "fork"
+    if (@board[0] == "x" && @board[8] == "x") || (@board[2] == "x" && @board[6] == "x")
+      (possibilities & [1,3,5,7]).sample
+    elsif (@board[1] == "x" && @board[8] == "x") || (@board[1] == "x" && @board[6] == "x")
+      (possibilities & [0..3]).sample
+    elsif (@board[0] == "x" && @board[7] == "x") || (@board[2] == "x" && @board[7] == "x")
+      (possibilities & [5..8]).sample
+    else
+      false
+    end
+  end
+
+  def run_algorithm
+    win || block || fork || play_center || play_corner || possibilities.sample
+  end
+
+  def possibilities
     possibilities = []
     @board.each_with_index do |element, index|
-      if element == nil
+      if element.nil?
         possibilities << index
       end
     end
     possibilities
-  end
-
-  def eliminate_possibilites
-    eliminations = []
-    @x_moves.each do |move|
-      @possible_wins.each do |array|
-        if array.include?(move) && array.include?(@o_moves.first)
-          eliminations << array
-        end
-      end
-    end
-    eliminations = eliminations.flatten.uniq
-  end
-
-  def prioritize(move_possibilities)
-
-    move_to_win = move_possibilities.sample
-    @possible_wins.each do |array|
-      possible_win = array - @o_moves
-      if possible_win.size == 1
-        move_to_win = possible_win.first
-      end
-    end
-
-    move_to_block = move_possibilities.sample
-    @possible_wins.each do |array|
-      possible_lose = array - @x_moves
-      if possible_lose.size == 1
-        move_to_block = possible_lose.first
-      end
-    end
-
-    move_possibilities.delete(move_to_win)
-    move_possibilities.delete(move_to_block)
-    move_possibilities.unshift(move_to_win, move_to_block)
-
-    move_possibilities
-  end
-
-  def find_empty_position(move_possibilities)
-    next_move = move_possibilities.first
-    if @board[next_move] == nil
-      @o_moves << next_move
-      next_move
-    else
-      move_possibilities.shift
-      find_empty_position(move_possibilities)
-    end
   end
 
   def print_board
